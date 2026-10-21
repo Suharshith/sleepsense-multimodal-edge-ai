@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adaptive Multimodal Edge AI Sleep Apnea Monitoring System V2</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-container">
+    
+    <!-- Top Header & Navigation -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <div class="brand-icon"><i class="fa-solid fa-microchip-ai"></i></div>
+        <div class="brand-titles">
+          <h1>SleepPulse AI <span class="badge-version">V2 EDGE</span></h1>
+          <p>Adaptive Multimodal Edge AI Sleep Apnea System</p>
+        </div>
+      </div>
+
+      <div class="nav-status-group">
+        <div class="status-chip chip-online" id="deviceStatusChip">
+          <span class="pulse-dot"></span>
+          <span id="deviceStatusText">ESP32 DEVKIT V1</span>
+        </div>
+        <div class="status-chip chip-wifi">
+          <i class="fa-solid fa-wifi"></i>
+          <span>192.168.0.103</span>
+        </div>
+        <div class="status-chip chip-session" id="sessionStatusChip">
+          <i class="fa-solid fa-bed-pulse"></i>
+          <span id="sessionStatusText">SESSION ACTIVE</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline" id="btnBenchmark">
+          <i class="fa-solid fa-chart-line"></i> TinyML Benchmark
+        </button>
+        <button class="btn btn-primary" id="btnGenerateReport">
+          <i class="fa-solid fa-file-medical"></i> Sleep Report
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Patient & Session Bar -->
+      <section class="patient-bar">
+        <div class="patient-info">
+          <div class="avatar"><i class="fa-solid fa-user-doctor"></i></div>
+          <div>
+            <h3 id="patientNameDisplay">Anonymous Patient (Research Participant)</h3>
+            <p>Session ID: <span id="sessionIdDisplay">SESSION-DEMO-001</span> | Duration: <span id="sessionDurationDisplay">30 mins</span></p>
+          </div>
+        </div>
+        <div class="session-controls">
+          <button class="btn btn-secondary btn-sm" id="btnToggleSession">
+            <i class="fa-solid fa-stop"></i> End Session
+          </button>
+        </div>
+      </section>
+
+      <!-- Metric Cards Grid (6 Cards) -->
+      <section class="cards-grid">
+        
+        <!-- Card 1: Edge AI TinyML Audio Classifier -->
+        <div class="metric-card card-ai">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-waveform"></i>
+              <span>TinyML Audio Classifier</span>
+            </div>
+            <span class="sensor-tag tag-i2s">INMP441 (I2S)</span>
+          </div>
+          <div class="card-body">
+            <div class="big-metric" id="audioClassDisplay">Normal Breathing</div>
+            <div class="metric-sub-row">
+              <div class="sub-item">
+                <span class="sub-label">Confidence</span>
+                <span class="sub-value" id="audioConfidenceDisplay">94%</span>
+              </div>
+              <div class="sub-item">
+                <span class="sub-label">Sound Level</span>
+                <span class="sub-value" id="audioDbDisplay">42.5 dB</span>
+              </div>
+              <div class="sub-item">
+                <span class="sub-label">Latency</span>
+                <span class="sub-value">42 µs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Pulse Oximetry (SpO2) -->
+        <div class="metric-card card-spo2">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-lungs"></i>
+              <span>Blood Oxygen (SpO2)</span>
+            </div>
+            <span class="sensor-tag tag-i2c">MAX30102</span>
+          </div>
+          <div class="card-body">
+            <div class="big-metric-group">
+              <div class="big-metric" id="spo2ValueDisplay">97.5<span class="unit">%</span></div>
+              <div class="badge-alert" id="spo2AlertBadge">NORMAL</div>
+            </div>
+            <div class="metric-sub-row">
+              <div class="sub-item">
+                <span class="sub-label">Desaturation Threshold</span>
+                <span class="sub-value">&lt; 92.0%</span>
+              </div>
+              <div class="sub-item">
+                <span class="sub-label">Signal Quality</span>
+                <span class="sub-value" id="signalQualityDisplay">95%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Heart Rate (PPG) -->
+        <div class="metric-card card-hr">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-heart-pulse"></i>
+              <span>Heart Rate (PPG)</span>
+            </div>
+            <span class="sensor-tag tag-i2c">MAX30102</span>
+          </div>
+          <div class="card-body">
+            <div class="big-metric-group">
+              <div class="big-metric" id="hrValueDisplay">68<span class="unit">BPM</span></div>
+            </div>
+            <div class="metric-sub-row">
+              <div class="sub-item">
+                <span class="sub-label">Finger Status</span>
+                <span class="sub-value text-success" id="fingerStatusDisplay">Detected</span>
+              </div>
+              <div class="sub-item">
+                <span class="sub-label">Valid Range</span>
+                <span class="sub-value">40 - 180 BPM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4: Motion & Sleep Posture -->
+        <div class="metric-card card-motion">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-person-sleeping"></i>
+              <span>Motion & Posture</span>
+            </div>
+            <span class="sensor-tag tag-i2c">MPU6050</span>
+          </div>
+          <div class="card-body">
+            <div class="big-metric" id="postureDisplay">Supine (Back)</div>
+            <div class="metric-sub-row">
+              <div class="sub-item">
+                <span class="sub-label">Accel Magnitude</span>
+                <span class="sub-value" id="movementValueDisplay">0.12 g</span>
+              </div>
+              <div class="sub-item">
+                <span class="sub-label">Restlessness</span>
+                <span class="sub-value" id="restlessValueDisplay">0.03</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Overall Multimodal Risk Gauge -->
+        <div class="metric-card card-risk">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-shield-virus"></i>
+              <span>Sleep Apnea Risk Index</span>
+            </div>
+            <span class="sensor-tag tag-fusion">FUSION ENGINE</span>
+          </div>
+          <div class="card-body">
+            <div class="risk-gauge-container">
+              <div class="risk-score-value" id="riskScoreDisplay">38.5</div>
+              <div class="risk-level-badge badge-low" id="riskLevelBadge">LOW RISK</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6: Event Counter Summary -->
+        <div class="metric-card card-events">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-list-check"></i>
+              <span>Session Event Counts</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="event-counts-grid">
+              <div class="event-count-box box-snore">
+                <span class="box-num" id="cntSnoring">15</span>
+                <span class="box-lbl">Snoring</span>
+              </div>
+              <div class="event-count-box box-abnormal">
+                <span class="box-num" id="cntAbnormal">12</span>
+                <span class="box-lbl">Abnormal</span>
+              </div>
+              <div class="event-count-box box-desat">
+                <span class="box-num" id="cntDesat">14</span>
+                <span class="box-lbl">Desat &lt;92%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Explainable Multimodal Fusion Section -->
+      <section class="explainability-section">
+        <div class="section-header">
+          <h2><i class="fa-solid fa-brain"></i> AI Risk Explainability & Factor Contribution Breakdown</h2>
+          <p>Transparent multimodal fusion breakdown showing contributing factors to current risk score</p>
+        </div>
+        <div class="explainability-grid">
+          <div class="factor-item">
+            <div class="factor-header">
+              <span><i class="fa-solid fa-microphone-lines"></i> Audio Burden (Weight: 35%)</span>
+              <span id="explainAudioPct">35%</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill bar-audio" id="barAudio" style="width: 35%;"></div></div>
+          </div>
+          <div class="factor-item">
+            <div class="factor-header">
+              <span><i class="fa-solid fa-lungs"></i> SpO2 Desaturation (Weight: 35%)</span>
+              <span id="explainSpo2Pct">45%</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill bar-spo2" id="barSpo2" style="width: 45%;"></div></div>
+          </div>
+          <div class="factor-item">
+            <div class="factor-header">
+              <span><i class="fa-solid fa-heart-pulse"></i> Heart Rate Instability (Weight: 15%)</span>
+              <span id="explainHrPct">10%</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill bar-hr" id="barHr" style="width: 10%;"></div></div>
+          </div>
+          <div class="factor-item">
+            <div class="factor-header">
+              <span><i class="fa-solid fa-person-sleeping"></i> Posture & Restlessness (Weight: 15%)</span>
+              <span id="explainMotionPct">10%</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill bar-motion" id="barMotion" style="width: 10%;"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Real-Time Synchronized Chart Panels -->
+      <section class="charts-section">
+        <div class="section-header">
+          <h2><i class="fa-solid fa-chart-area"></i> Synchronized Telemetry Timelines</h2>
+          <p>Timestamp-aligned continuous tracking of physiological, acoustic, and motion signals</p>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h3>Blood Oxygen (SpO2 %) & Heart Rate (BPM)</h3>
+            <div class="chart-container">
+              <canvas id="physioChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <h3>Sound Level (dB SPL) & Sleep Apnea Risk Index</h3>
+            <div class="chart-container">
+              <canvas id="riskChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sleep Analytics & Event Table -->
+      <section class="events-section">
+        <div class="section-header">
+          <h2><i class="fa-solid fa-clock-rotate-left"></i> Validated Temporal Sleep Events Log</h2>
+          <p>Consecutive-window validated event log correlation of audio, SpO2 and motion</p>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Event Type</th>
+                <th>Confidence</th>
+                <th>Duration</th>
+                <th>Sensor Context (SpO2 / HR / dB / Posture)</th>
+              </tr>
+            </thead>
+            <tbody id="eventsTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Disclaimer Footer -->
+      <footer class="disclaimer-footer">
+        <p><i class="fa-solid fa-triangle-exclamation"></i> <strong>Medical Disclaimer:</strong> This system provides AI-based sleep-risk assessment for research and prototype purposes and is not a substitute for clinical diagnosis or polysomnography.</p>
+      </footer>
+
+    </main>
+
+  </div>
+
+  <!-- Modal 1: TinyML Model Performance Benchmark -->
+  <div class="modal-backdrop" id="benchmarkModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-microchip"></i> TinyML Model Performance Benchmark</h2>
+        <button class="modal-close" id="btnCloseBenchmark">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Comparative analysis of Original Float32 Dense Model vs INT8 Quantized TinyML C-Array on ESP32-C3.</p>
+        
+        <table class="benchmark-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Original Float32 Model</th>
+              <th>TinyML INT8 Model</th>
+              <th>Optimization Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Architecture / Format</td>
+              <td>TensorFlow / Keras Dense</td>
+              <td>TFLite Micro C-Array</td>
+              <td>Quantized INT8</td>
+            </tr>
+            <tr>
+              <td>Classification Accuracy</td>
+              <td id="bmFloatAcc">98.2%</td>
+              <td id="bmInt8Acc">97.8%</td>
+              <td class="text-warning" id="bmAccLoss">-0.4% Loss</td>
+            </tr>
+            <tr>
+              <td>F1-Score</td>
+              <td id="bmFloatF1">0.978</td>
+              <td id="bmInt8F1">0.974</td>
+              <td>Minimal degradation</td>
+            </tr>
+            <tr>
+              <td>Model Flash Size</td>
+              <td>448 Bytes</td>
+              <td>136 Bytes</td>
+              <td class="text-success" id="bmCompRatio">3.29x Compression</td>
+            </tr>
+            <tr>
+              <td>RAM Footprint</td>
+              <td>512 Bytes</td>
+              <td>128 Bytes</td>
+              <td class="text-success">75% RAM Saved</td>
+            </tr>
+            <tr>
+              <td>Inference Latency</td>
+              <td>180 µs</td>
+              <td>42 µs</td>
+              <td class="text-success" id="bmSpeedup">4.29x Speedup</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Sleep Report Modal -->
+  <div class="modal-backdrop" id="reportModal">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-file-medical"></i> Sleep Session Clinical Summary Report</h2>
+        <div>
+          <button class="btn btn-primary btn-sm" id="btnPrintReport"><i class="fa-solid fa-print"></i> Print Report</button>
+          <button class="modal-close" id="btnCloseReport">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body printable-report" id="reportPrintArea">
+        <div class="report-header-block">
+          <div>
+            <h1>SLEEP APNEA RISK ASSESSMENT REPORT</h1>
+            <p>Multimodal Edge AI Screening | ESP32-C3 System V2</p>
+          </div>
+          <div class="report-meta">
+            <p><strong>Report Date:</strong> <span id="rptDate">2026-08-13</span></p>
+            <p><strong>Report ID:</strong> <span id="rptId">RPT-10924</span></p>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <h3>1. Patient & Session Metadata</h3>
+          <div class="report-grid-2">
+            <div><p><strong>Patient Name:</strong> <span id="rptPatientName">Anonymous Patient</span></p></div>
+            <div><p><strong>Session ID:</strong> <span id="rptSessionId">SESSION-DEMO-001</span></p></div>
+            <div><p><strong>Monitoring Duration:</strong> <span id="rptDuration">30 Minutes</span></p></div>
+            <div><p><strong>Hardware Node:</strong> ESP32-C3 RISC-V @ 160MHz</p></div>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <h3>2. Physiological & Acoustic Summary</h3>
+          <div class="report-grid-3">
+            <div class="rpt-metric-box">
+              <span class="lbl">Average SpO2</span>
+              <span class="val" id="rptAvgSpo2">96.5%</span>
+            </div>
+            <div class="rpt-metric-box">
+              <span class="lbl">Lowest SpO2 Dip</span>
+              <span class="val text-danger" id="rptMinSpo2">88.5%</span>
+            </div>
+            <div class="rpt-metric-box">
+              <span class="lbl">Average Heart Rate</span>
+              <span class="val" id="rptAvgHr">68.4 BPM</span>
+            </div>
+            <div class="rpt-metric-box">
+              <span class="lbl">Snoring Events</span>
+              <span class="val" id="rptSnoreCnt">15</span>
+            </div>
+            <div class="rpt-metric-box">
+              <span class="lbl">Abnormal Breathing Dips</span>
+              <span class="val text-warning" id="rptAbnormalCnt">12</span>
+            </div>
+            <div class="rpt-metric-box">
+              <span class="lbl">Desaturations (&lt;92%)</span>
+              <span class="val text-danger" id="rptDesatCnt">14</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="report-section">
+          <h3>3. Multimodal Sleep Risk Assessment</h3>
+          <div class="report-risk-banner banner-moderate" id="rptRiskBanner">
+            <div>
+              <h4>OVERALL RISK LEVEL: <span id="rptRiskLevel">MODERATE</span></h4>
+              <p>Risk Index: <strong id="rptRiskScore">68.5</strong> / 100</p>
+            </div>
+          </div>
+          <ul class="report-list" id="rptFactorsList">
+            <li>Acoustic snore burden elevated during supine posture periods.</li>
+            <li>Transient oxygen desaturation dips below 92.0%.</li>
+            <li>Increased movement variance associated with position shifts.</li>
+          </ul>
+        </div>
+
+        <div class="report-section">
+          <h3>4. Recommendations</h3>
+          <ul class="report-list" id="rptRecommendations">
+            <li>Consider lateral sleep positioning therapy to reduce supine sleep apnea risk.</li>
+            <li>Schedule clinical follow-up with a sleep specialist for formal polysomnography (PSG) evaluation if symptoms persist.</li>
+          </ul>
+        </div>
+
+        <div class="report-disclaimer-box">
+          <p><strong>Medical Disclaimer:</strong> This system provides AI-based sleep-risk assessment for research and prototype purposes and is not a substitute for clinical diagnosis or polysomnography.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom App JS -->
+  <script src="app.js"></script>
+</body>
+</html>

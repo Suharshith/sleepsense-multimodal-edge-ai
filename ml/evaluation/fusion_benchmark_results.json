@@ -1,0 +1,22 @@
+{
+  "experiment_name": "Multimodal Fusion Comparative Benchmark",
+  "sample_size": 500,
+  "models": {
+    "Audio_Only": {
+      "accuracy": 0.958,
+      "f1_score": 0.9381
+    },
+    "Physiological_Only": {
+      "accuracy": 0.982,
+      "f1_score": 0.9709
+    },
+    "Fixed_Multimodal_Fusion": {
+      "accuracy": 0.988,
+      "f1_score": 0.9808
+    },
+    "Adaptive_Quality_Fusion": {
+      "accuracy": 1.0,
+      "f1_score": 1.0
+    }
+  }
+}

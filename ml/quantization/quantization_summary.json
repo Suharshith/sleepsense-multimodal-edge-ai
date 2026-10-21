@@ -1,0 +1,9 @@
+{
+  "model_name": "SleepSense TinyML Audio CNN",
+  "input_features": 13,
+  "classes": 3,
+  "float32_size_bytes": 556,
+  "int8_size_bytes": 172,
+  "compression_ratio": 3.23,
+  "estimated_latency_micros": 42
+}

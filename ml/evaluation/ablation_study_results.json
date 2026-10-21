@@ -1,0 +1,50 @@
+[
+  {
+    "configuration": "1. Audio Only",
+    "accuracy": 0.9983,
+    "precision": 0.9947,
+    "recall": 1.0,
+    "f1_score": 0.9973,
+    "roc_auc": 1.0
+  },
+  {
+    "configuration": "2. PPG Only",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "roc_auc": 1.0
+  },
+  {
+    "configuration": "3. Audio + PPG",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "roc_auc": 1.0
+  },
+  {
+    "configuration": "4. Audio + PPG + Posture",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "roc_auc": 1.0
+  },
+  {
+    "configuration": "5. Full Modality (Fixed)",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "roc_auc": 1.0
+  },
+  {
+    "configuration": "6. Adaptive Quality Fusion",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "roc_auc": 1.0
+  }
+]

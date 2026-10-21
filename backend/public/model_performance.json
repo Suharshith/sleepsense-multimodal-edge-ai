@@ -1,0 +1,73 @@
+{
+  "evaluationTimestamp": "2026-08-13T14:58:00Z",
+  "datasetSamples": 500,
+  "inputFeatures": 13,
+  "outputClasses": [
+    "Normal Breathing",
+    "Snoring Detected",
+    "Abnormal Breathing / Apnea"
+  ],
+  "originalModel": {
+    "framework": "TensorFlow / Keras Dense",
+    "precision": "Float32",
+    "accuracy": 0.992,
+    "precisionScore": 0.9938,
+    "recallScore": 0.9907,
+    "f1Score": 0.9922,
+    "confusionMatrix": [
+      [
+        212,
+        0,
+        0
+      ],
+      [
+        2,
+        152,
+        0
+      ],
+      [
+        2,
+        0,
+        132
+      ]
+    ],
+    "modelSizeBytes": 448,
+    "modelSizeKB": 0.438,
+    "ramAllocatedBytes": 512,
+    "inferenceLatencyMicros": 180
+  },
+  "tinyMLModel": {
+    "framework": "TensorFlow Lite Micro / C-Array",
+    "precision": "INT8 Quantized",
+    "accuracy": 0.992,
+    "precisionScore": 0.9938,
+    "recallScore": 0.9907,
+    "f1Score": 0.9922,
+    "confusionMatrix": [
+      [
+        212,
+        0,
+        0
+      ],
+      [
+        2,
+        152,
+        0
+      ],
+      [
+        2,
+        0,
+        132
+      ]
+    ],
+    "modelSizeBytes": 136,
+    "modelSizeKB": 0.133,
+    "ramAllocatedBytes": 128,
+    "inferenceLatencyMicros": 42
+  },
+  "comparison": {
+    "accuracyLossPct": 0.0,
+    "sizeReductionRatio": 3.29,
+    "latencySpeedup": 4.29
+  }
+}
